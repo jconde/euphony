@@ -1,0 +1,98 @@
+body {
+	background:url(bg.jpg) #A98436 no-repeat left top;
+	background-size: 100%;
+	background-attachment: fixed;
+	-webkit-transition: background 1.5s linear;
+	-moz-transition: background 1.5s linear;
+	-o-transition: background 1.5s linear;
+	-ms-transition: background 1.5s linear;
+	transition: background 1.5s linear;
+}
+.navbar {
+	margin: auto;
+	position: absolute;
+	max-height:50px;
+}
+#content {
+	background-color: rgba(255,255,255,0.5);
+	margin: auto;
+	position: absolute;
+	top: 50px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	min-width:500px;
+	min-height:300px;
+	max-width:800px;
+	max-height:500px;
+}
+.form-control {
+	max-width:300px;
+}
+.btn-large {
+	margin: auto;
+	width:200px;
+	height:100px;		
+	position: absolute;
+	top: 100px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+.list-group {
+	top: 100px;
+	position: absolute;
+	width:300px;
+	background-color: rgba(255,255,255,0.5)
+}
+#bottom {
+	width:100%;
+	height:240px;
+	position: absolute;
+	bottom:0;
+	right:0;
+}
+#messageLog {
+	width: -webkit-calc(100% - 320px);
+	height:90%;
+	background-color: rgba(255,255,255,0.5);
+	resize: none;
+}
+#messageBox {
+	width: -webkit-calc(100% - 320px);
+	height:10%;
+	position: absolute;
+	bottom:0;
+	left:0;
+}
+#localVideo {
+	width:320px;
+	height:240px;
+	position: absolute;
+	bottom:0;
+	right:0;
+}
+video {
+	width:auto;
+	height:auto;
+}
+#videos div {
+	display: inline;
+	margin: 0 1em 0 1em;
+}
+#wrap {
+	 width:100%;
+	 margin:0 auto;
+}
+#left_col {
+	 float:left;
+	 width:20%;
+}
+#right_col {
+		margin-left: 300px;
+	 width:80%;
+	 
+}
+#userlist {
+	background-color: rgba(255,255,255,0.5)
+}

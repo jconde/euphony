@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Euphony Web Meeting version 0.2</title>
+  <meta charset="UTF-8" />
+  <style media="screen" type="text/css">
+	video {width:480px; height:360px}
+	#localscreen {width:480px; height:360px}
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+  <script language="javascript" type="text/javascript">
+		window.onload = function() {
+		   document.getElementById('room').onkeypress = function(e) {
+			   doClick(e);
+		   };
+		   document.getElementById('user').onkeypress = function(e) {
+			   doClick(e);
+		   };
+		};
+		function doClick(e)
+		{
+		  var ev = e || window.event;
+		  var key = ev.keyCode;
+
+		  if (key == 13)
+		  {
+			createRoom_onclick()
+		  }
+		}
+		function createRoom_onclick() 
+		{
+			var userName = document.getElementById( "user" ).value;
+			var roomName = document.getElementById( "room" ).value;
+			var relLink;
+			if (roomName == "")
+				roomName = guid();
+			if (userName == "")
+				userName =  "guest" + guid();
+			relLink = "/" + roomName + "#" + userName;
+			window.location = relLink;
+		}
+		function s4() {
+		  return Math.floor((1 + Math.random()) * 0x10000)
+					 .toString(16)
+					 .substring(1);
+		};
+
+		function guid() {
+		  return s4() + s4();
+		}
+	</script>
+<style type="text/css">
+	body {
+		background:url(bg.jpg) #A98436 no-repeat left top;
+		background-size: 100%;
+		background-attachment: fixed;
+		font-family: Calibri Light;
+	}
+	.navbar {
+		margin: auto;
+		position: absolute;
+		max-height:50px;
+	}
+	#content {
+		background-color: rgba(255,255,255,0.5);
+		margin: auto;
+		position: absolute;
+		top: 50px;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		min-width:500px;
+		min-height:300px;
+		max-width:800px;
+		max-height:500px;
+	}
+	.form-control {
+		margin: auto;
+		max-width:300px;
+		margin-top: 5px;
+	}
+	.btn-large {
+		font-size: 175%;
+		margin: auto;
+		width:200px;
+		height:100px;		
+		position: absolute;
+		top: 40%;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+	}
+	#title {
+		font-size: 300%;
+		margin: auto;
+		margin-top: 10%;
+		text-align: center;
+	}
+</style>
+</head>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<ul class="nav navbar-nav">
+	  <li class="active"><a href="#">What's Euphony?</a></li>
+	  <li><a href="#">Home</a></li>
+	  <li><a href="http://euphony.chickenkiller.com/blog">Blog</a></li>
+	  <li><a href="http://euphony.chickenkiller.com/blog/?p=2">About</a></li>
+	</ul>
+</div>
+<section>
+  <div id="content">
+    <div id="title">Meeting anywhere!</div>
+	<br></br>
+	<input type="text" id="user" class="form-control" placeholder="Your name here">
+	<input type="text" id="room" class="form-control" placeholder="Wanna name your room?">
+	<button class="btn btn-large btn-success" type="button" onclick="createRoom_onclick()" >Meet!</button>
+  </div>
+</section>
+<br /><br /><br /><br />
+
+
+
+</html>

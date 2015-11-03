@@ -1,0 +1,33 @@
+<html ng-app="Room" ng-controller="Ctrl">
+
+  <head>
+		<title>Euphony Web Meeting - {{roomname}}</title>
+		<meta charset="UTF-8"/>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/style.css">
+		<script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.13/angular.min.js"></script>
+    <script src="/client.js"></script>
+  </head>
+
+  <body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#">What's Euphony?</a></li>
+				<li><a href="#">Home</a></li>
+				<!-- <li><a href="http://euphony.chickenkiller.com/blog">Blog</a></li> -->
+				<li><a href="https://github.com/jconde/euphony">About</a></li>
+			</ul>
+		</div>
+		<div id="videos">
+			<p ng-repeat="(key,value) in users">
+				<video id="video-{{key}}" autoplay="true" ng-src="{{users[key].video[0]}}" style=""></video>
+			</p>
+		</div>
+		<div id="bottom">
+			<div id="messageLog" readonly><span ng-repeat="msg in messageLog">[{{msg.time}}] <b>{{msg.user}}</b>: {{msg.msg}}<br/></span></div>
+			<input id="messageBox" chat ng-model='msg'></input><br/>
+			<video id="localVideo" autoplay="true" muted="true" ng-src="{{localVideo}}" style="{{localVideoTransform}};"></video><br/>
+		</div>
+  </body>
+</html>
