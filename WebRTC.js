@@ -137,7 +137,7 @@ var io = require("socket.io")(webServer);
 
 io.sockets.on('connection', function (socket) {
 
-	var address = socket.handshake.address.address;
+	var address = socket.handshake.address;
 	console.log((new Date()) + ' Peer connected: ' + address);
 	
 	socket.on('login', function(user, room) {
