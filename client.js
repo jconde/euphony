@@ -130,10 +130,9 @@ room.service('Room', ['$rootScope', function($rootScope) {
 			this.url = document.URL;
 			this.username = document.URL.split('#').pop() || '';
 			this.roomname = document.URL.split('/').pop().split('#')[0];
-			// var url = document.URL.split(this.roomname)[0];
 			
 			// if (!this.status.connected) {
-				this.socket = io("http://euphony.herokuapp.com/");
+				this.socket = io(document.URL.split(this.roomname)[0]);
 				this.status.connected = true;
 			// } else {
 				// this.socket.socket.reconnect();
