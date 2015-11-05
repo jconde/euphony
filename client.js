@@ -133,7 +133,7 @@ room.service('Room', ['$rootScope', function($rootScope) {
 			// var url = document.URL.split(this.roomname)[0];
 			
 			// if (!this.status.connected) {
-				this.socket = io(document.URL.split(this.roomname)[0]);
+				this.socket = io("http://euphony.herokuapp.com/");
 				this.status.connected = true;
 			// } else {
 				// this.socket.socket.reconnect();
