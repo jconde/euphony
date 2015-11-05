@@ -1,20 +1,20 @@
 // Node WebRTC
 
-var https = require("https"); // Tiene que ser HTTPS porque Chrome no comparte la pantalla por HTTP
+var http = require("http"); // Should be HTTPS because Chrome does not share screen on HTTP
 var url = require("url");
 var fs = require("fs");
 var util = require("util");
 
-var httpsport = 443;
+var port = process.env.PORT || 443;
 
 // HTTPS Web Server
 
-var httpsoptions = {
-	key: fs.readFileSync('server.key'),
-	cert: fs.readFileSync('server.crt')
-};
+// var httpsoptions = {
+	// key: fs.readFileSync('server.key'),
+	// cert: fs.readFileSync('server.crt')
+// };
 
-var webServer = https.createServer(httpsoptions, function (request, response) {
+var webServer = http.createServer(function (request, response) {
 
   var req = url.parse(request.url, true);
 	var path = req.path; console.log(JSON.stringify(req));
@@ -124,16 +124,16 @@ var webServer = https.createServer(httpsoptions, function (request, response) {
 			}
 		});
 	}
-}).listen(httpsport);
+}).listen(port);
 
-console.log("Web Server is listening in port " + httpsport);
+console.log("Web Server is listening in port " + port);
 
 
 // WebSockets Server
 
 var rooms = {};
 
-var io = require("socket.io")(httpsport);
+var io = require("socket.io")(webServer);
 
 io.sockets.on('connection', function (socket) {
 
