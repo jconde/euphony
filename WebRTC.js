@@ -16,7 +16,7 @@ var httpsoptions = {
 
 var webServer = https.createServer(httpsoptions, function (request, response) {
 
-    var req = url.parse(request.url, true);
+  var req = url.parse(request.url, true);
 	var path = req.path; console.log(JSON.stringify(req));
 
 	if (path == '/') {
@@ -133,7 +133,7 @@ console.log("Web Server is listening in port " + httpsport);
 
 var rooms = {};
 
-var io = require("socket.io")(webServer);
+var io = require("socket.io")(httpsport);
 
 io.sockets.on('connection', function (socket) {
 
