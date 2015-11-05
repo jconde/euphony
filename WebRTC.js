@@ -5,7 +5,7 @@ var url = require("url");
 var fs = require("fs");
 var util = require("util");
 
-var port = process.env.PORT || 443;
+var port = process.env.PORT || 80;
 
 // HTTPS Web Server
 
