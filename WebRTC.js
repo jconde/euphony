@@ -57,7 +57,7 @@ var webServer = http.createServer(function (request, response) {
 				response.end();
 			}
 			else {
-				response.writeHead(200, {"Content-Type": 'text/javascript'});
+				response.writeHead(200, {"Content-Type": 'text/css'});
 				response.write(css);
 				response.end();
 			}
@@ -137,7 +137,7 @@ var io = require("socket.io")(webServer);
 
 io.sockets.on('connection', function (socket) {
 
-	var address = socket.handshake.address;
+	var address = socket.handshake.address.address;
 	console.log((new Date()) + ' Peer connected: ' + address);
 	
 	socket.on('login', function(user, room) {
@@ -189,9 +189,9 @@ io.sockets.on('connection', function (socket) {
 		});
 		
 		// WebRTC stream routing request
-		socket.on('route', function(to,data) {
-			send(this, 'route', to, data);
-		});
+		// socket.on('route', function(to,data) {
+			// send(this, 'route', to, data);
+		// });
 
 		// Moderation
 		socket.on('admin', function(to, data) {
@@ -204,6 +204,7 @@ io.sockets.on('connection', function (socket) {
 			var mod = rooms[room].mod.indexOf(from) >= 0;
 			var muted = rooms[room].mute.indexOf(to) >= 0;
 			var address = rooms[room].userlist[to].handshake.address.address;
+			var banned = rooms[room].ban.indexOf(address) >= 0;
 			
 			switch (data) {
 				case 'mod': if (mod && (rooms[room].mod.indexOf(to) < 0)) {
@@ -211,7 +212,7 @@ io.sockets.on('connection', function (socket) {
 								bcast_admin(socket, to, 'mod');
 							}
 							break;
-				case 'ban': if (mod && (rooms[room].ban.indexOf(address) < 0)) {
+				case 'ban': if (mod && !banned) {
 								rooms[room].ban.push(address);
 							}
 				case 'kick': if (mod) {
@@ -219,7 +220,7 @@ io.sockets.on('connection', function (socket) {
 								 rooms[room].userlist[to].disconnect();
 							 }
 							 break;
-				case 'unban': if (mod && (rooms[room].ban.indexOf(address) >= 0)) {
+				case 'unban': if (mod && banned) {
 								 rooms[room].ban.splice(rooms[room].ban.indexOf(address),1);
 							  }
 							  break;
@@ -227,19 +228,12 @@ io.sockets.on('connection', function (socket) {
 								 rooms[room].mute.push(to);
 								 bcast_admin(socket, to, 'mute');
 							 }
-							 else if (from == to) {
-								 bcast_admin(socket, to, 'mute');
-							 }
 							 break;
-				case 'unmute': if (!unmuted && (from == to)) {
-								   bcast_admin(socket, to, 'unmute');
-							   }
-							   else if (mod && muted) {
+				case 'unmute': if (mod && muted) {
 								   rooms[room].mute.splice(rooms[room].mute.indexOf(to), 1);
 								   bcast_admin(socket, to, 'unmute');
 							   }
 							   break;
-				default: break;
 			}
 		});
 		

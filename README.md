@@ -1,4 +1,4 @@
-# euphony
+# Euphony
 NodeJS/WebRTC Communication Portal
 
 Euphony is a WebRTC conferencing platform for multiple rooms and users based on Node.js and AngularJS.

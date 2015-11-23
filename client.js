@@ -5,6 +5,7 @@
 
 var room = angular.module('Room', []);
 
+///////////
 // Config
 
 room.config(function($sceDelegateProvider) {
@@ -15,13 +16,14 @@ room.config(function($sceDelegateProvider) {
   ]);
 });
 
+///////////////
 // Controller
 
-room.controller('Ctrl',['$scope','Room',function ($scope,Room) {
+room.controller('Ctrl',['$scope','Room',function ($scope,Room/*,$location,$anchorScroll*/) {
   
   $scope.$on('localVideo.update', function (e) {
 		if (Room.localStream)
-			$scope.localVideo = webkitURL.createObjectURL(Room.localStream);
+			$scope.localVideo = URL.createObjectURL(Room.localStream);
 		else
 			$scope.localVideo = null;
 		if ($scope.status.streamType == 'camera')
@@ -32,8 +34,7 @@ room.controller('Ctrl',['$scope','Room',function ($scope,Room) {
   });
 	
 	$scope.$on('userVideo.update', function (e,user) {
-		console.log(Room.users[user].streams.length);
-		$scope.$apply($scope.users[user].video = Room.users[user].streams.map(function(stream) { return webkitURL.createObjectURL(stream) }));
+		$scope.$apply($scope.users[user].video = Room.users[user].streams.map(function(stream) { return URL.createObjectURL(stream) }));
 	});
 	
 	$scope.$on('userlist.update', function (e) {
@@ -42,15 +43,21 @@ room.controller('Ctrl',['$scope','Room',function ($scope,Room) {
 	
 	$scope.$on('messageLog.update', function (e) {
 		$scope.$apply($scope.messageLog = Room.messageLog);
+		e = $('#messageLog');
+		e.scrollTop(e[0].scrollHeight);
 	});
   
 	Room.init();
 	
+	$scope.log = function (x) { console.log(x); };
+	
+	$scope.room = Room;
 	$scope.username = Room.username;
 	$scope.roomname = Room.roomname;
   $scope.users = Room.users;
 	$scope.status = Room.status;
 	$scope.messageLog = Room.messageLog;
+	$scope.msg = "";
 	
 	setInterval(function(){
 			if (document.URL != Room.url)
@@ -58,39 +65,6 @@ room.controller('Ctrl',['$scope','Room',function ($scope,Room) {
 		}, 
 	1000);
 	
-}]);
-
-
-// Directives
-
-room.directive("chat", ['Room', function (Room) {
-	return {
-		link: function(scope,element,attrs) {
-			element.bind("keypress", function(e) {
-				if (e.which === 13) {
-					Room.sendMsg(scope.msg);
-					scope.$apply(scope.msg = '');
-				}
-			});
-		}
-	};
-}]);
-
-room.directive("button", ['Room', function (Room) {
-  return {
-    restrict: "A",
-    link: function(scope,element,attr) {
-      element.bind("click", function() {
-        console.log(element[0].innerText);
-        if (element[0].innerText.match('Add'))
-          Room.userAdd(scope.uid,scope.pc);
-        else if (element[0].innerText.match('Del'))
-          Room.userDel(scope.uid);
-        else
-          Room.call(scope.uid);
-      });
-    }
-  };
 }]);
 
 
@@ -111,6 +85,8 @@ room.service('Room', ['$rootScope', function($rootScope) {
 		status : {
 			connected : false,
 			muted : false,
+			smuted : false,
+			vmuted : false,
 			mod : false,
 			streamType : 'camera',
 		},
@@ -130,14 +106,8 @@ room.service('Room', ['$rootScope', function($rootScope) {
 			this.url = document.URL;
 			this.username = document.URL.split('#').pop() || '';
 			this.roomname = document.URL.split('/').pop().split('#')[0];
-			
-			// if (!this.status.connected) {
-				this.socket = io(document.URL.split(this.roomname)[0]);
-				this.status.connected = true;
-			// } else {
-				// this.socket.socket.reconnect();
-				// this.socket.removeAllListeners();
-			// }
+			this.socket = io(document.URL.split(this.roomname)[0]);
+			this.status.connected = true;
 			
 			// Socket events init
 			
@@ -147,17 +117,21 @@ room.service('Room', ['$rootScope', function($rootScope) {
 			});
 			
 			this.socket.on('userlist', function(list) {
+				if (list.length>0)
+					document.body.style.backgroundImage = 'url(bg2.jpg)';
 				list.map(function(x) { room.users[x] = { 'pc' : '', 'streams' : [], 'dc' : {}, 'stats' : {}, 'status' : { 'muted' : false } }; });
 				room.initStream(room.cons.camera);
-				// $rootScope.$broadcast('userlist.update');
 			});
 			
 			this.socket.on('hello', function(from, data) {
+				document.body.style.backgroundImage = 'url(bg2.jpg)';
 				room.userAdd(from);
 			});
 
 			this.socket.on('bye', function(from, data) {
 				room.userDel(from);
+				if (Object.keys(room.users).length == 0)
+					document.body.style.backgroundImage = 'url(bg.jpg)';
 			});
 			
 			this.socket.on('message', function(from, data) {
@@ -170,7 +144,7 @@ room.service('Room', ['$rootScope', function($rootScope) {
 			});
 			
 			this.socket.on('offer', function(from, data) {
-				console.log('Llamada recibida: ' + JSON.stringify(data));
+				console.log('Call received: ' + JSON.stringify(data));
 				if (!room.status.muted)
 					room.users[from].pc.addStream(room.localStream);
 				room.users[from].pc.setRemoteDescription(new RTCSessionDescription(data));
@@ -181,18 +155,18 @@ room.service('Room', ['$rootScope', function($rootScope) {
 			});
 			
 			this.socket.on('answer', function(from, data) {
-				console.log('Respuesta recibida: ' + JSON.stringify(data));
+				console.log('Response received: ' + JSON.stringify(data));
 				room.users[from].pc.setRemoteDescription(new RTCSessionDescription(data));
 			});
 			
 			this.socket.on('ice', function(from, data) {
-				console.log('Candidato ICE recibido: ' + JSON.stringify(data));
+				console.log('ICE  candidate received: ' + JSON.stringify(data));
 				if (data)
 					room.users[from].pc.addIceCandidate(new RTCIceCandidate(data));
 			});
 			
 			this.socket.on('admin', function(user, data) {
-				console.log('Status actualizado: ' + JSON.stringify(data));
+				console.log('Updated status: ' + JSON.stringify(data));
 				if (room.username === user)
 					switch (data) {
 						case 'mod': room.status.mod = true;
@@ -317,12 +291,27 @@ room.service('Room', ['$rootScope', function($rootScope) {
 			channel.onopen = function() { console.log('Channel created with ' + user); };
 			channel.onclose = function() { console.log('Channel closed with ' + user); };
 			channel.onerror = function(err) { console.log('Channel error: ' + err); };
-			// channel.onmessage = function(event) { this.receiveFile(event.data, user); };
 			this.users[user].dc.channel = channel;
 		},
 		
 		admin : function(op,user) {
-			this.socket.emit('admin','user',op);
+			if (user == this.username)
+				switch (op) {
+					case "smute":
+						this.status.smuted = !this.status.smuted;
+						this.localStream.getAudioTracks().forEach(function (track) {
+							track.enabled = !room.status.smuted;
+						});
+						break;
+					case "vmute":
+						this.status.vmuted = !this.status.vmuted;
+						this.localStream.getVideoTracks().forEach(function (track) {
+							track.enabled = !room.status.vmuted;
+						});
+						break;
+				}
+			else
+				this.socket.emit('admin', user, op);
 		},
 		
 		getBitrate : function(user) {
@@ -349,3 +338,58 @@ room.service('Room', ['$rootScope', function($rootScope) {
 }]);
 
 
+///////////////
+// Directives
+
+room.directive("chatInput", ['Room', function (Room) {
+	return {
+		link: function(scope,element,attrs) {
+			element.bind("keypress", function(e) {
+				if (e.which === 13 && scope.msg != '') {
+					Room.sendMsg(scope.msg);
+					scope.$apply(scope.msg = '');
+				}
+			});
+		}
+	};
+}]);
+
+
+room.directive("button", ['Room', function (Room) {
+  return {
+    restrict: "A",
+    link: function(scope,element,attr) {
+      element.bind("click", function() {
+        console.log(element[0].innerText);
+        if (element[0].innerText.match('Add'))
+          Room.userAdd(scope.uid,scope.pc);
+        else if (element[0].innerText.match('Del'))
+          Room.userDel(scope.uid);
+        else
+          Room.call(scope.uid);
+      });
+    }
+  };
+}]);
+
+
+room.directive('showonhover',function() {
+	return {
+		link : function(scope, element, attrs) {
+			element.bind('mouseenter', function() {
+				element.siblings().fadeIn();
+			});
+		}
+	};
+});
+
+
+room.directive('hideonleave',function() {
+	return {
+		link : function(scope, element, attrs) {
+			element.bind('mouseleave', function() {
+				element.fadeOut();
+			});
+		}
+	};
+});
