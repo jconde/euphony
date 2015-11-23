@@ -137,7 +137,7 @@ var io = require("socket.io")(webServer);
 
 io.sockets.on('connection', function (socket) {
 
-	var address = socket.handshake.address.address;
+	var address = socket.handshake.address;
 	console.log((new Date()) + ' Peer connected: ' + address);
 	
 	socket.on('login', function(user, room) {
@@ -203,7 +203,7 @@ io.sockets.on('connection', function (socket) {
 			
 			var mod = rooms[room].mod.indexOf(from) >= 0;
 			var muted = rooms[room].mute.indexOf(to) >= 0;
-			var address = rooms[room].userlist[to].handshake.address.address;
+			var address = rooms[room].userlist[to].handshake.address;
 			var banned = rooms[room].ban.indexOf(address) >= 0;
 			
 			switch (data) {
