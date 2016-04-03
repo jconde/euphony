@@ -21,8 +21,9 @@ var webServer = http.createServer(function (request, response) {
 
 	if (path == '/') {
 		console.log('Index accessed.');
-		fs.readFile('./index.html', function(err, html) {
+		fs.readFile('./client/index.html', function(err, html) {
 			if (err) {
+				console.log(err);
 				response.writeHead(404);
 				response.write('404 - Page not found.');
 				response.end();
@@ -36,7 +37,7 @@ var webServer = http.createServer(function (request, response) {
 		
 	} else if (path == '/client.js') {
 		console.log('Client accesed.');
-		fs.readFile('./client.js', function (err, js) {
+		fs.readFile('./client/client.js', function (err, js) {
 			if (err) {
 				response.writeHead(404);
 				response.write('404 - Page not found.');
@@ -50,7 +51,7 @@ var webServer = http.createServer(function (request, response) {
 		});
 		
 	} else if (path == '/style.css') {
-		fs.readFile('./style.css', function (err, css) {
+		fs.readFile('./client/style.css', function (err, css) {
 			if (err) {
 				response.writeHead(404);
 				response.write('404 - Page not found.');
@@ -64,7 +65,7 @@ var webServer = http.createServer(function (request, response) {
 		});
 		
 	} else if (path == '/bg.jpg') {
-		fs.readFile('./bg.jpg', function (err, jpg) {
+		fs.readFile('./client/bg.jpg', function (err, jpg) {
 			if (err) {
 				response.writeHead(404);
 				response.write('404 - Page not found.');
@@ -78,7 +79,7 @@ var webServer = http.createServer(function (request, response) {
 		});
 		
 	} else if (path == '/bg2.jpg') {
-		fs.readFile('./bg2.jpg', function (err, jpg) {
+		fs.readFile('./client/bg2.jpg', function (err, jpg) {
 			if (err) {
 				response.writeHead(404);
 				response.write('404 - Page not found.');
@@ -92,7 +93,7 @@ var webServer = http.createServer(function (request, response) {
 		});
 		
 	} else if (path == '/favicon.ico') {
-		fs.readFile('./favicon.ico', function (err, ico) {
+		fs.readFile('./client/favicon.ico', function (err, ico) {
 			if (err) {
 				response.writeHead(404);
 				response.write('404 - Page not found.');
@@ -111,7 +112,7 @@ var webServer = http.createServer(function (request, response) {
 		
 	} else {
 		console.log('Room accesed: ' + path);
-		fs.readFile('./client.html', function(err, html) {
+		fs.readFile('./client/client.html', function(err, html) {
 			if (err) {
 				response.writeHead(404);
 				response.write('404 - Page not found.');

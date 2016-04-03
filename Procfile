@@ -1,1 +1,1 @@
-web: node WebRTC.js
+web: node server.js

@@ -15,28 +15,49 @@
   <body>
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="https://github.com/jconde/euphony#euphony">GitHub</a></li>
+				<li class="active"><a href="https://github.com/jconde/euphony#euphony"><i class="fa fa-github fa-2x"></i></a></li>
 				<li><a href="/">Home</a></li>
 			</ul>
 		</div>
 		<div id="videos">
 			<div id="videoBackground" ng-repeat="(key,value) in users">
 					<video id="video-{{key}}" autoplay="true" ng-src="{{users[key].video[0]}}" style="" showonhover></video>
-					<!-- <div id="videoControlUser">
-						<button class="sendFile btn btn-default" ng-click="room.sendFile({{key}})">
-							<i class="fa fa-eye fa-2x" ng-if="!room.status.vmuted"></i>
-							<i class="fa fa-eye-slash fa-2x" ng-if="room.status.vmuted"></i>
-						</button>
-					</div> -->
+					<div id="videoControlUser" hideonleave>
+						<!--button class="sendFile btn btn-default" ng-click="room.sendFile(key)">
+							<i class="fa fa-send-o fa-2x"></i>
+						</button-->
+					</div>
 					<div id="videoControlMod" ng-if="room.status.mod">
 					</div>
 			</div>
+		</div>
+		<div id="panel">
+			<h2>Participants</h2>
+			<table class="table">
+				<tbody>
+					<tr>
+						<td><i class="action fa fa-user" ng-class="room.status.mod ? 'text-danger' : ''"></i> {{username}}</td>
+						<td></td>
+						<td></td>
+						<td>
+							<i class="action fa" ng-class="room.status.smuted ? 'fa-microphone-slash' : 'fa-microphone'" ng-click="room.admin('smute',username)"></i></td><td><i class="action fa" ng-class="room.status.vmuted ? 'fa-eye-slash' : 'fa-eye'" ng-click="room.admin('vmute',username)"></i>
+						</td>
+					</tr>
+					<tr ng-repeat="(key, value) in users">
+						<td><i class="action fa fa-user" ng-class="value.status.mod ? 'text-danger' : ''"></i> {{key}}</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><i ng-if="room.status.mod" ng-click="room.admin('kick', key)" class="action fa fa-times text-danger"></i></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div id="bottom">
 			<div id="messageLog"><span ng-repeat="msg in messageLog">[{{msg.time}}] <b>{{msg.user}}</b>: {{msg.msg}}<br/></span></div>
 			<input id="messageBox" chat-input ng-model='msg'></input>
 			<div id="localVideoContainer">
-				<video id="localVideo" autoplay="true" muted="true" ng-src="{{localVideo}}" style="{{localVideoTransform}};" showonhover>Your browser does not support HTML5 video.</video>
+				<video id="localVideo" autoplay="true" muted="true" ng-src="{{localVideo}}" style="{{localVideoTransform}}" showonhover>Your browser does not support HTML5 video.</video>
 				<div id="localControl" hideonleave>
 					<button class="videoMute btn btn-default" ng-click="room.admin('vmute',username)">
 						<i class="fa fa-eye fa-2x" ng-if="!room.status.vmuted" title="stop image"></i>

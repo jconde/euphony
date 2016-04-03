@@ -1,5 +1,5 @@
 # Euphony
-NodeJS/WebRTC Communication Portal
+NodeJS/WebRTC Communication Platform
 
 Live demo: https://euphony.herokuapp.com
 
@@ -7,16 +7,12 @@ Euphony is a WebRTC conferencing platform for multiple rooms and users based on 
 
 INSTALLATION
 
-Copy the entire folder to your server and run "node WebRTC.js". It will start a local https server so
-it may require administrator privileges. You can substitute the dummy "server.crt" and "server.key" by
-your own certificates so you don't see a browser error when accessing the site.
+Copy the entire folder to your server and run "node WebRTC.js". It will start a local HTTP server so
+it may require administrator privileges. If you want to use HTTPS, you can use the commented code in "server.js" and use your own certificates. Using HTTPS has some advantages over HTTP so your browser won't ask twice for permission and Chrome will allow you to share your desktop.
 
 USING EUPHONY
 
-Just use https to access the server, let your browser enter the page even if the certificate is not
-valid to access the home page. Once you are there type your nickname and the name of the room you
-want to create. Other users can join your room. You can send invitations using the following format
-of restful URL:
+Just use your browser to access the server and type your nickname and the name of the room you want to create. Other users can join your room. You can send invitations using the following format URL:
 
 https://server/room#nick
 

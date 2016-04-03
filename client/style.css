@@ -3,6 +3,7 @@ body {
 	background:url(bg.jpg) #DDD no-repeat left top;
 	background-size: 100%;
 	background-attachment: fixed;
+	padding-top: 51px;
 	-webkit-transition: background 1.5s linear;
 	-moz-transition: background 1.5s linear;
 	-o-transition: background 1.5s linear;
@@ -13,7 +14,7 @@ body {
 	background-color: rgba(255,255,255,0.7);
 	margin: auto;
 	position: absolute;
-	top: 50px;
+	top: 45px;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
@@ -119,10 +120,20 @@ video {
 }
 #videos {
 	float: center;
-	display: inline;
+	display: inline-block;
 	margin: 0 1em 0 1em;
 }
 #videoBackground {
 	float: left;
 	margin: 10px;
+}
+#panel {
+	float: right;
+	background-color: rgba(200,200,255,0.5);
+	height: -webkit-calc(100% - 240px);
+	width: 320px;
+	padding: 20px;
+}
+.action {
+	cursor: pointer;
 }
